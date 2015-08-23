@@ -144,7 +144,7 @@ var characters_tab = (function() {
 
     // Display Block
     $.each(listen_degree, function(i, character) {
-      $("#all_characters").append("<a href='#'class='col-xs-3 btn btn-sm' role='button' data-toggle='tooltip' data-placement='top' title='"+character[1]+"''>"+character[0]+"</a>");
+      $("#all_characters").append("<a href='#' class='col-xs-3 btn btn-sm' role='button' data-toggle='tooltip' data-placement='top' title='"+character[1]+"'>"+character[0]+"</a>");
     });
 
 
@@ -153,6 +153,11 @@ var characters_tab = (function() {
     $("#all_characters a:gt("+avgDeltaPosition+")").addClass("btn-default");
 
     $('[data-toggle="tooltip"]').tooltip();
+
+    $(".character_type").append($("<option>").attr("value","").text("--NONE--"));
+    $.each(all_chars, function(i, character) {
+      $(".character_type").append($("<option>").attr("value",character).text(character));
+    });
   }
 
   return self;
