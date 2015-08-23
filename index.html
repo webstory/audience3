@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Audience3 - A Finaldrafe script analyzer</title>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css"/>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.6.0/codemirror.min.css"/>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.6.0/theme/paraiso-light.min.css"/>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"/>
+  <link type="text/css" rel="stylesheet" href="css/style.css"/>
+
+</head>
+<body>
+  <section class="container">
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="index.html">
+          <div class="brand-logo"><i class="fa fa-university"></i>Audience3</div>
+        </a>
+      </div>
+    </nav>
+  </section>
+  <section class="container">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <span class="panel-title">Editor</span>
+          </div>
+          <textarea id="editor"></textarea>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#characters" aria-controls="characters" role="tab" data-toggle="tab">Characters</a></li>
+          <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Tab2</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="characters">
+            <h1>Characters <button class="btn btn-primary" onclick="characters_tab.update()">Update</button></h1>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span class="panel-title">All characters(Sorted by listen degree)</span>
+              </div>
+              <div class="panel panel-body">
+                <div id="all_characters"></div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span class="panel-title">Groups</span>
+              </div>
+              <div class="panel panel-body">
+                <h4>Main</h4>
+                <div class="row" id="main_characters"></div>
+                <h4>Sub</h4>
+                <div class="row" id="sub_characters"></div>
+                <h4>Extra</h4>
+                <div class="row" id="extra_characters"></div>
+              </div>
+            </div>
+
+          </div>
+          <div role="tabpanel" class="tab-pane" id="tab2">
+            <h1>Tab2</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/2.1.1/math.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.6.0/codemirror.min.js"></script>
+  <script src="js/codemirror.js"></script>
+  <script src="js/analyzer.js"></script>
+
+  <!-- Only for test -->
+  <script>
+  $(function() {
+    $.get("test/pretty_woman.txt", function(content) {
+      window.editor.setValue(content);
+    });
+  });
+  </script>
+
+</body>
+</html>

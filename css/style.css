@@ -1,0 +1,99 @@
+/* Main app style */
+body {
+}
+
+#editor {
+  width:100%;
+  height:100%;
+}
+
+.cm-sceneheading {font-size:x-large; background-color: #ddd;}
+.cm-action {background-color: #edd;}
+.cm-character {background-color: #ded;}
+.cm-dialogue {background-color: #dde;}
+.cm-parenthetical {background-color: #ede;}
+
+svg {
+  display: block;
+  width:100%;
+  height:100%;
+}
+
+#character_net {
+  position: relative;
+  left:0;
+  top:0;
+  min-height: 800px;
+}
+
+tabset,tab {
+  min-height: 800px;
+}
+
+.tab-content .panel {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.nopadding {
+  padding:0 !important;
+}
+
+#tableview.group1 {color: red; }
+#tableview.group2 {color: green; }
+#tableview.group3 {/* Nothing */ }
+
+/* d3js force layout */
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+.link.none {
+  fill:none;
+  stroke-width: 0px;
+}
+
+.link.low {
+  stroke: none;
+  stroke-width: 0px;
+}
+
+.link.mid {
+  stroke: #ada;
+  stroke-width: 1.5px;
+}
+
+.link.high {
+  stroke: red;
+  stroke-width: 2.5px;
+}
+
+
+.link-label {
+  font-family: sans-serif;
+  font-size: 11px;
+}
+
+svg circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+svg text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+svg text.none {font-size:0;}
+svg text.low {font-size:0;}
+svg text.mid {}
+svg text.high {}
+
+.dl-horizontal dt {
+  white-space: normal;
+}
