@@ -130,7 +130,7 @@ var characters_tab = (function() {
 
     degrees1.shift();
     delete degress2;
-    
+
     var maxDeltaPosition = _.indexOf(delta, math.max(delta)) + 1;
     var avgDeltaPosition = _.takeWhile(degrees1, function(n) { return n >= math.mean(degrees1); }).length;
 
@@ -144,31 +144,15 @@ var characters_tab = (function() {
 
     // Display Block
     $.each(listen_degree, function(i, character) {
-      $("#all_characters").append("<a href='#'class='col-xs-3 btn btn-default btn-sm' role='button' data-toggle='tooltip' data-placement='top' title='"+character[1]+"''>"+character[0]+"</a>");
+      $("#all_characters").append("<a href='#'class='col-xs-3 btn btn-sm' role='button' data-toggle='tooltip' data-placement='top' title='"+character[1]+"''>"+character[0]+"</a>");
     });
 
 
-    $.each(main, function(i, character) {
-      $("#main_characters").append("<a href='#'class='col-xs-3 btn btn-primary btn-sm' role='button'>"+character+"</a>");
-    });
-
-    $.each(sub, function(i, character) {
-      $("#sub_characters").append("<a href='#'class='col-xs-3 btn btn-success btn-sm' role='button'>"+character+"</a>");
-    });
-
-    $.each(extra, function(i, character) {
-      $("#extra_characters").append("<a href='#'class='col-xs-3 btn btn-default btn-sm' role='button'>"+character+"</a>");
-    });
+    $("#all_characters a:lt("+maxDeltaPosition+")").addClass("btn-primary");
+    $("#all_characters a:gt("+(maxDeltaPosition-1)+"):lt("+avgDeltaPosition+")").addClass("btn-success");
+    $("#all_characters a:gt("+avgDeltaPosition+")").addClass("btn-default");
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    $.each(all_chars, function(i, character) {
-
-      //$("#all_characters").append("<a href='#'class='col-xs-3 btn btn-default btn-sm' role='button'>"+character+"</a>");
-    });
-  };
-
-
 
   return self;
 })();
