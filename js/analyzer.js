@@ -153,6 +153,7 @@ var characters_tab = (function() {
     $("#all_characters a:gt("+avgDeltaPosition+")").addClass("btn-default");
 
     $('[data-toggle="tooltip"]').tooltip();
+  }
 
   return self;
 })();
