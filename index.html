@@ -32,17 +32,22 @@
             <span class="panel-title">Editor</span>
           </div>
           <textarea id="editor"></textarea>
+          <div class="panel-footer">
+            <div class="row">
+              <button id="characters_tab" class="btn btn-primary col-xs-12" onclick="characters_tab.update()">Update</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-7">
         <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#characters" aria-controls="characters" role="tab" data-toggle="tab">Characters</a></li>
-          <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Tab2</a></li>
+          <li role="presentation" class="active" id="characters_tab"><a href="#characters" aria-controls="characters" role="tab" data-toggle="tab">Characters</a></li>
+          <li role="presentation" id="matrix_tab"><a href="#matrix" aria-controls="matrix" role="tab" data-toggle="tab">Matrix</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="characters">
-            <h1>Characters <button id="characters_tab" class="btn btn-primary" onclick="characters_tab.update()">Update</button></h1>
+            <h1>Characters</h1>
             <div class="panel panel-default">
               <div class="panel-heading">
                 <span class="panel-title">All characters(Sorted by listen degree)</span>
@@ -70,10 +75,32 @@
                 </div>
               </div>
             </div>
+            <button id="matrix_tab" class="btn btn-primary" onclick="matrix_tab.update(); $('#matrix_tab a').trigger('click');">Next &gt;&gt;</button>
 
           </div>
-          <div role="tabpanel" class="tab-pane" id="tab2">
-            <h1>Tab2</h1>
+          <div role="tabpanel" class="tab-pane" id="matrix">
+            <h1>Matrix</h1>
+            <table id="character_matrix" class="table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th>*</th>
+                  <th>M</th>
+                  <th>T</th>
+                  <th>H1</th>
+                  <th>H2</th>
+                  <th>O1</th>
+                  <th>O2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th>M</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>T</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>H1</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>H2</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>O1</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><th>O2</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

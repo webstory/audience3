@@ -30,6 +30,20 @@ svg {
   border:1px solid red;
 }
 
+#character_matrix {
+
+}
+
+#character_matrix th {
+  background-color:#ccc;
+}
+
+
+#character_matrix td {
+  width:30px;
+  height:30px;
+}
+
 tabset,tab {
   min-height: 800px;
 }
