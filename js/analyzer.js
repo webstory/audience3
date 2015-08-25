@@ -1,7 +1,7 @@
 var module = {};
 
 var Scene = function(title) {
-  var self = this;
+  var self = {};
 
   self.title = ""+title;
   self.characters = [];
@@ -14,9 +14,6 @@ var Scene = function(title) {
         self.characters.push(character.trim());
         self.dialogs[character] = 0;
       }
-      if(!_.contains(Scene.all_characters, character)) {
-        Scene.all_characters.push(character.trim());
-      }
     }
   };
 
@@ -24,22 +21,66 @@ var Scene = function(title) {
   return self;
 };
 
-Scene.all_characters = [];
-Scene.get_all_characters = function() {
-    return Scene.all_characters.sort();
-};
-
-
-
 var characters_tab = (function(module) {
   var self = {};
 
   self.update = function() {
-    var doc = window.editor.getValue();
+    build_character_group();
 
+    var doc1 = window.script1.getValue();
+    var doc2 = window.script2.getValue();
+
+    var script1 = parseScript(doc1);
+    build_character_list_ui(script1, $("#all_characters1"));
+
+    var script2 = parseScript(doc2);
+    build_character_list_ui(script2, $("#all_characters2"));
+  };
+
+  var build_character_list_ui = function(parsed_script, elem) {
+    $(elem).empty();
+    var main = parsed_script.main;
+    var sub = parsed_script.sub;
+    var extra = parsed_script.extra;
+    var ld = function(name) {
+      return _.filter(parsed_script.listen_degree, function(n) { return n[0] == name; })[0];
+    }
+
+    $.each(main, function(i, character) {
+      $(elem).append("<a href='#' class='col-xs-3 btn btn-sm btn-primary' role='button' data-toggle='tooltip' data-placement='top' title='"+ld(character)+"'>"+character+"</a>");
+    });
+
+    $.each(sub, function(i, character) {
+      $(elem).append("<a href='#' class='col-xs-3 btn btn-sm btn-success' role='button' data-toggle='tooltip' data-placement='top' title='"+ld(character)+"'>"+character+"</a>");
+    });
+
+    $.each(extra, function(i, character) {
+      $(elem).append("<a href='#' class='col-xs-3 btn btn-sm btn-default' role='button' data-toggle='tooltip' data-placement='top' title='"+ld(character)+"'>"+character+"</a>");
+    });
+
+
+
+    // $(elem).find("a:lt("+maxDeltaPosition+")").addClass("btn-primary");
+    // $(elem).find("a:gt("+(maxDeltaPosition-1)+"):lt("+avgDeltaPosition+")").addClass("btn-success");
+    // $(elem).find("a:gt("+avgDeltaPosition+")").addClass("btn-default");
+
+    $('[data-toggle="tooltip"]').tooltip();
+  }
+
+  var build_character_group = function() {
+    var groups = $("#character_group_def").val().split(",");
+    var target = $("#character_groups1,#character_groups2").empty();
+
+    _.each(groups, function(group) {
+      $("<label class='col-xs-6'>"+group+" <input type='text' class='character_group'></label>").appendTo(target);
+    });
+  }
+
+  var parseScript = function(doc) {
+    var result = {};
     var scenes = [];
 
-    lines = doc.split('\n');
+    var lines = doc.split('\n');
 
     var cur_scene = new Scene();
     var cur_character = 'NONAME';
@@ -73,10 +114,9 @@ var characters_tab = (function(module) {
       }
     });
 
-    module.scenes = scenes;
-
     // Pass 2: Extract additional character in action tag
-    all_chars = Scene.get_all_characters();
+    var all_chars = _.uniq(_.flatten(_.map(scenes, function(scene) { return scene.characters; })));
+
     $.each(scenes, function(i, scene) {
       $.each(all_chars, function(j, character) {
         if(scene.action_script.toUpperCase().indexOf(character) != -1) {
@@ -87,7 +127,7 @@ var characters_tab = (function(module) {
       delete scene.sction_script;
     });
 
-    // Pass 3: Make listen matrix(Alphabetical order)
+    // Pass 3: Make listen matrix
     var listen_matrix = math.zeros(all_chars.length, all_chars.length).valueOf();
     $.each(scenes, function(i, scene) {
 
@@ -113,6 +153,8 @@ var characters_tab = (function(module) {
     listen_degree = _.zip(all_chars, listen_degree);
     listen_degree = _.sortBy(listen_degree, function(n) { return n[1]; }).reverse();
 
+    result.listen_degree = listen_degree;
+
     // Pass 5: Re-adjust all_characters(Degree order)
     all_chars = _.map(listen_degree, function(n) { return n[0]; });
 
@@ -129,13 +171,13 @@ var characters_tab = (function(module) {
       });
     });
 
-    module.listen_matrix = listen_matrix;
+    result.listen_matrix = listen_matrix;
 
     console.log(listen_degree);
     console.log(scenes);
     console.log(listen_matrix);
 
-    module.all_characters = all_chars;
+    result.all_characters = all_chars;
 
 
     // Pass 5: Make character groups
@@ -156,30 +198,11 @@ var characters_tab = (function(module) {
     var maxDeltaPosition = _.indexOf(delta, math.max(delta)) + 1;
     var avgDeltaPosition = _.takeWhile(degrees1, function(n) { return n >= math.mean(degrees1); }).length;
 
-    console.log(maxDeltaPosition);
-    console.log(avgDeltaPosition);
+    result.main = _.slice(all_chars, 0, maxDeltaPosition);
+    result.sub = _.slice(all_chars, maxDeltaPosition, avgDeltaPosition);
+    result.extra = _.slice(all_chars, avgDeltaPosition, all_chars.length);
 
-    var main = _.slice(all_chars, 0, maxDeltaPosition);
-    var sub = _.slice(all_chars, maxDeltaPosition, avgDeltaPosition);
-    var extra = _.slice(all_chars, avgDeltaPosition, all_chars.length);
-
-
-    // Display Block
-    $.each(listen_degree, function(i, character) {
-      $("#all_characters").append("<a href='#' class='col-xs-3 btn btn-sm' role='button' data-toggle='tooltip' data-placement='top' title='"+character[1]+"'>"+character[0]+"</a>");
-    });
-
-
-    $("#all_characters a:lt("+maxDeltaPosition+")").addClass("btn-primary");
-    $("#all_characters a:gt("+(maxDeltaPosition-1)+"):lt("+avgDeltaPosition+")").addClass("btn-success");
-    $("#all_characters a:gt("+avgDeltaPosition+")").addClass("btn-default");
-
-    $('[data-toggle="tooltip"]').tooltip();
-
-    $(".character_type").append($("<option>").attr("value","").text("--NONE--"));
-    $.each(all_chars, function(i, character) {
-      $(".character_type").append($("<option>").attr("value",character).text(character));
-    });
+    return result;
   }
 
   return self;

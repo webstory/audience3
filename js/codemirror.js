@@ -47,8 +47,8 @@ $(function() {
 
   CodeMirror.defineMIME("text/x-finaldraft", "txt");
 
-  window.editor = CodeMirror.fromTextArea(
-    document.getElementById("editor"),
+  window.script1 = CodeMirror.fromTextArea(
+    document.getElementById("script1"),
     {
       lineNumbers: true,
       lineWrapping: true,
@@ -56,13 +56,12 @@ $(function() {
       theme:"paraiso-light"
     });
 
-
-
-  // CodeMirror.commands.parseScript = function(cm) {
-  //   var currentCharacter = 'Unknown';
-  //   var surrentScene = 'Untitled';
-    
-  // }
-
-
+  window.script2 = CodeMirror.fromTextArea(
+    document.getElementById("script2"),
+    {
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: "finaldraft",
+      theme:"paraiso-light"
+    });
 });

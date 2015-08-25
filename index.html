@@ -29,15 +29,25 @@
       <div class="col-md-5">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <span class="panel-title">Editor</span>
+            <span class="panel-title">Script 1</span>
           </div>
-          <textarea id="editor"></textarea>
-          <div class="panel-footer">
-            <div class="row">
-              <button id="characters_tab" class="btn btn-primary col-xs-12" onclick="characters_tab.update()">Update</button>
-            </div>
-          </div>
+          <textarea id="script1"></textarea>
         </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <span class="panel-title">Script 2</span>
+          </div>
+          <textarea id="script2"></textarea>
+        </div>
+
+        <div class="row">
+          <label>Character Group<input type="text" id="character_group_def" value="M,T,H1,H2,O1,O2"/></label>
+        </div>
+
+        <div class="row">
+          <button id="characters_tab" class="btn btn-primary col-xs-12" onclick="characters_tab.update()">Update</button>
+        </div>
+
       </div>
       <div class="col-md-7">
         <ul class="nav nav-tabs" role="tablist">
@@ -50,10 +60,10 @@
             <h1>Characters</h1>
             <div class="panel panel-default">
               <div class="panel-heading">
-                <span class="panel-title">All characters(Sorted by listen degree)</span>
+                <span class="panel-title">Script1 All characters(Sorted by listen degree)</span>
               </div>
               <div class="panel panel-body">
-                <div id="all_characters"></div>
+                <div id="all_characters1"></div>
               </div>
             </div>
             <div class="panel panel-default">
@@ -61,17 +71,24 @@
                 <span class="panel-title">Groups</span>
               </div>
               <div class="panel panel-body">
-                <div class="row">
-                  <label class="col-xs-3 text-right">Main</label><select class="col-xs-3 character_type"></select>
-                  <label class="col-xs-3 text-right">Target</label><select class="col-xs-3 character_type"></select>
+                <div class="row" id="character_groups1">
                 </div>
-                <div class="row">
-                  <label class="col-xs-3 text-right">Helper1</label><select class="col-xs-3 character_type"></select>
-                  <label class="col-xs-3 text-right">Helper2</label><select class="col-xs-3 character_type"></select>
-                </div>
-                <div class="row">
-                  <label class="col-xs-3 text-right">Opponent1</label><select class="col-xs-3 character_type"></select>
-                  <label class="col-xs-3 text-right">Opponent2</label><select class="col-xs-3 character_type"></select>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span class="panel-title">Script2 All characters(Sorted by listen degree)</span>
+              </div>
+              <div class="panel panel-body">
+                <div id="all_characters2"></div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span class="panel-title">Groups</span>
+              </div>
+              <div class="panel panel-body">
+                <div class="row" id="character_groups2">
                 </div>
               </div>
             </div>
@@ -123,7 +140,10 @@
   <script>
   $(function() {
     $.get("test/pretty_woman.txt", function(content) {
-      window.editor.setValue(content);
+      window.script1.setValue(content);
+    });
+    $.get("test/500_days_of_summer.txt", function(content) {
+      window.script2.setValue(content);
     });
   });
   </script>
