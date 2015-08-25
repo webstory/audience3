@@ -42,6 +42,9 @@ svg {
 #character_matrix td {
   width:30px;
   height:30px;
+
+  color:white;
+  font-size:x-small;
 }
 
 tabset,tab {

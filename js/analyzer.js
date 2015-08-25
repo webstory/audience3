@@ -1,4 +1,4 @@
-var module;
+var module = {};
 
 var Scene = function(title) {
   var self = this;
@@ -87,8 +87,35 @@ var characters_tab = (function(module) {
       delete scene.sction_script;
     });
 
-    // Pass 3: Make listen matrix
+    // Pass 3: Make listen matrix(Alphabetical order)
     var listen_matrix = math.zeros(all_chars.length, all_chars.length).valueOf();
+    $.each(scenes, function(i, scene) {
+
+      $.each(scene.characters, function(i, teller) {
+        var teller_index = _.indexOf(all_chars, teller);
+        if(teller_index != -1) {
+          $.each(scene.characters, function(i, listener) {
+            var listener_index = _.indexOf(all_chars, listener);
+            listen_matrix[teller_index][listener_index] += scene.dialogs[teller];
+          });
+        }
+      });
+    });
+
+    // Pass 4: Character sort by listen degree
+    var listen_degree = math.zeros(all_chars.length).valueOf();
+    for(var i=0; i<all_chars.length; i++) {
+      for(var j=0; j<all_chars.length; j++) {
+        listen_degree[i] += listen_matrix[i][j];
+      }
+    }
+
+    listen_degree = _.zip(all_chars, listen_degree);
+    listen_degree = _.sortBy(listen_degree, function(n) { return n[1]; }).reverse();
+
+    // Pass 5: Re-adjust all_characters(Degree order)
+    all_chars = _.map(listen_degree, function(n) { return n[0]; });
+
     $.each(scenes, function(i, scene) {
 
       $.each(scene.characters, function(i, teller) {
@@ -104,19 +131,6 @@ var characters_tab = (function(module) {
 
     module.listen_matrix = listen_matrix;
 
-    // Pass 4: Character sort by listen degree
-    var listen_degree = math.zeros(all_chars.length).valueOf();
-    for(var i=0; i<all_chars.length; i++) {
-      for(var j=0; j<all_chars.length; j++) {
-        listen_degree[i] += listen_matrix[i][j];
-      }
-    }
-
-    listen_degree = _.zip(all_chars, listen_degree);
-    listen_degree = _.sortBy(listen_degree, function(n) { return n[1]; }).reverse();
-
-    // Re-adjust all_characters
-    all_chars = _.map(listen_degree, function(n) { return n[0]; });
     console.log(listen_degree);
     console.log(scenes);
     console.log(listen_matrix);
@@ -178,8 +192,11 @@ var characters_tab = (function(module) {
 var matrix_tab = (function(module) {
   var self = {};
   var matrix_size = 6;
+
+
   var heat1 = function(heat) {
-    var value = parseInt(heat * 255);
+    var contrast = $("#contrast").val() - 0;
+    var value = math.min(255, parseInt(heat * contrast));
     return "rgba("+value+",0,0,100)";
   }
 
@@ -192,16 +209,31 @@ var matrix_tab = (function(module) {
 
     var degree = math.zeros(matrix_size, matrix_size).valueOf();
 
+    module.listen_matrix
+
     for(var i=0; i<matrix_size; i++) {
       for(var j=0; j<matrix_size; j++) {
-        degree[i][j] = 0;
+        var teller = groups[i];
+        var listener = groups[j];
+
+        var teller_index = module.all_characters.indexOf(teller);
+        var listener_index = module.all_characters.indexOf(listener);
+        
+        if(teller_index != -1 && listener_index != -1) {
+          degree[i][j] = module.listen_matrix[teller_index][listener_index];
+        }
       }
     }
+
+    var total_degree = math.sum(degree);
+    var normalized_degree = math.multiply(degree, 1/total_degree).valueOf();
 
     for(var i=0; i<matrix_size; i++) {
       for(var j=0; j<matrix_size; j++) {
         degree[i][j] = i*10+j;
-        $("#character_matrix tbody tr:nth("+(i)+") td:nth("+(j)+")").css("background-color",heat1(degree[i][j]/55)).text(degree[i][j]);
+        $("#character_matrix tbody tr:nth("+(i)+") td:nth("+(j)+")")
+          .css("background-color",heat1(normalized_degree[i][j]))
+          .text((normalized_degree[i][j]*100).toFixed(1));
       }
     }
 
