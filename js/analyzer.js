@@ -1,3 +1,4 @@
+'use strict';
 var module = {};
 
 var Scene = function(title) {
@@ -15,11 +16,12 @@ var Scene = function(title) {
         self.dialogs[character] = 0;
       }
     }
-  };
-
+  }
 
   return self;
 };
+
+
 
 var characters_tab = (function(module) {
   var self = {};
@@ -35,6 +37,11 @@ var characters_tab = (function(module) {
 
     var script2 = parseScript(doc2);
     build_character_list_ui(script2, $("#all_characters2"));
+    
+    module.script1 = script1;
+    
+    console.log(script1);
+    module.script2 = script2;
   };
 
   var build_character_list_ui = function(parsed_script, elem) {
@@ -70,6 +77,21 @@ var characters_tab = (function(module) {
     });
   }
 
+  /**
+   * Parse Script
+   * 
+   * return object schema: {
+   *   all_characters[]: Character names sorted by talking langth
+   *   listen_degree[]: Listen degree for each character
+   *   listen_matrix[][]: Talk-Listen matrix 
+   *   main: main characters
+   *   sub: sub characters
+   *   extra: extra characters
+   * }
+   * 
+   * @param {Object} doc Codemirror Document
+   * @return {Object} parsed information
+   */
   var parseScript = function(doc) {
     var result = {};
     var scenes = [];
@@ -86,7 +108,7 @@ var characters_tab = (function(module) {
         scenes.push(cur_scene);
         cur_scene = new Scene(e);
       } else {
-        indent = e.match(/^\s*/)[0].length;
+        var indent = e.match(/^\s*/)[0].length;
 
         // Character
         if(indent >= 20 && indent <= 24) {
@@ -118,7 +140,7 @@ var characters_tab = (function(module) {
         }
       });
 
-      delete scene.sction_script;
+      delete scene.action_script;
     });
 
     // Pass 3: Make listen matrix
@@ -184,7 +206,6 @@ var characters_tab = (function(module) {
     delta[0] = 0;
 
     degrees1.shift();
-    delete degress2;
 
     var maxDeltaPosition = _.indexOf(delta, math.max(delta)) + 1;
     var avgDeltaPosition = _.takeWhile(degrees1, function(n) { return n >= math.mean(degrees1); }).length;
@@ -207,7 +228,7 @@ var matrix_tab = (function(module) {
   var self = {};
   var matrix_size = 6;
 
-
+  // Utility
   var heat1 = function(heat) {
     var contrast = $("#contrast").val() - 0;
     var value = math.min(255, parseInt(heat * contrast));
@@ -220,23 +241,17 @@ var matrix_tab = (function(module) {
     return "rgba(0,0,"+value+",100)";
   }
 
-  var make_groups = function(g1, g2) {
-    var script1Group = [];
-    g1.find(".character_group").each(function(i) {
-      script1Group.push(_.map($(this).val().toUpperCase().split(","), function(name) { return name.trim(); }));
+  // Step 1: make groups
+  var make_groups = function(elem) {
+    var scriptGroup = [];
+    elem.find(".character_group").each(function(i) {
+      scriptGroup.push(_.map($(this).val().toUpperCase().split(","), function(name) { return name.trim(); }));
     });
 
-    var script2Group = [];
-    g2.find(".character_group").each(function(i) {
-      script2Group.push(_.map($(this).val().toUpperCase().split(","), function(name) { return name.trim(); }));
-    });
-
-    console.log(script1Group);
-    console.log(script2Group);
-
-    return [script1Group,script2Group];
+    return scriptGroup;
   }
 
+  // Step 2: build matrix UI
   var build_table_ui = function(target, groupNames) {
     target.empty();
     var head = $("<thead>");
@@ -265,10 +280,53 @@ var matrix_tab = (function(module) {
 
     target.append(head).append(body);
   }
+  
+  // Step 3: make matrix content
+  /**
+   * Make matrix
+   * 
+   * @param {Integer} matrix size
+   * @param {Array} listen matrix(2 dimentional array)
+   * @param {Array} character type group
+   * 
+   * @return {Array} character heat-map matrix(2d)
+   */
+  var make_matrix = function(matrix_size, parsedScript, groups) {
+    var matrix = math.zeros(matrix_size, matrix_size).valueOf();
+    var listen_matrix = parsedScript.listen_matrix;
+    var all_chars = parsedScript.all_characters;
+    
+    for(var i=0; i<matrix_size; i++) {
+      for(var j=0; j<matrix_size; j++) {
+        _.each(groups[i], function(character) {
+          matrix[i][j] += listen_matrix[all_chars.indexOf(character)][j];
+        });
+      }
+    }
+
+    var total_degree = math.sum(matrix);
+    var normalized_matrix = math.multiply(matrix, 1/total_degree).valueOf();
+    
+    return normalized_matrix;
+  }
+  
+  // Step 4: Insert matrix values to Matrix UI
+  var fill_matrix = function(elem, matrix, heatcolor) {
+    var matrix_size = matrix.length;
+    
+    for(var i=0; i<matrix_size; i++) {
+      for(var j=0; j<matrix_size; j++) {
+        $(elem).find("tbody tr:nth("+(i)+") td:nth("+(j)+")")
+          .css("background-color",heatcolor(matrix[i][j]))
+          .text((matrix[i][j]*100).toFixed(1));
+      }
+    }
+  }
 
   self.update = function() {
     var groupNames = $("#character_group_def").val().split(",");
-    var groups = make_groups($("#character_groups1"), $("#character_groups2"));
+    var groups1 = make_groups($("#character_groups1"));
+    var groups2 = make_groups($("#character_groups2"));
 
     var matrix1 = $("#character_matrix1");
     var matrix2 = $("#character_matrix2");
@@ -277,40 +335,13 @@ var matrix_tab = (function(module) {
     build_table_ui(matrix2, groupNames);
 
     var matrix_size = groupNames.length;
-
-    var degree = math.zeros(matrix_size, matrix_size).valueOf();
-
-////////////////////////////////////////////////////////
-// How go get listen matrix?
-    module.listen_matrix
-
-    for(var i=0; i<matrix_size; i++) {
-      for(var j=0; j<matrix_size; j++) {
-        var teller = groups[i];
-        var listener = groups[j];
-
-        var teller_index = module.all_characters.indexOf(teller);
-        var listener_index = module.all_characters.indexOf(listener);
-        
-        if(teller_index != -1 && listener_index != -1) {
-          degree[i][j] = module.listen_matrix[teller_index][listener_index];
-        }
-      }
-    }
-
-    var total_degree = math.sum(degree);
-    var normalized_degree = math.multiply(degree, 1/total_degree).valueOf();
-
-    for(var i=0; i<matrix_size; i++) {
-      for(var j=0; j<matrix_size; j++) {
-        degree[i][j] = i*10+j;
-        $("#character_matrix tbody tr:nth("+(i)+") td:nth("+(j)+")")
-          .css("background-color",heat1(normalized_degree[i][j]))
-          .text((normalized_degree[i][j]*100).toFixed(1));
-      }
-    }
-
-  };
+    
+    var heatmap1 = make_matrix(matrix_size, module.script1, groups1);
+    var heatmap2 = make_matrix(matrix_size, module.script2, groups2);
+    
+    fill_matrix(matrix1, heatmap1, heat1);
+    fill_matrix(matrix2, heatmap2, heat2);
+  }
 
   return self;
 })(module);
