@@ -98,14 +98,39 @@
           </div>
           <div role="tabpanel" class="tab-pane" id="matrix">
             <h1>Matrix</h1>
-            <h4>Contrast</h4>
-            <input id="contrast" type="range" min="1000" max="10000" value="2000" onInput="matrix_tab.update()"/>
-            <h4>Script 1</h4>
-            <table id="character_matrix1" class="table-bordered table-condensed character_matrix">
-            </table>
-            <h4>Script 2</h4>
-            <table id="character_matrix2" class="table-bordered table-condensed character_matrix">
-            </table>
+            <div class="row">
+              <label class="col-md-6">Contrast
+                <input id="contrast" type="range" min="1000" max="10000" value="2000" onInput="matrix_tab.update()"/>
+              </label>
+              <label class="col-md-6">
+                <input type="checkbox" onClick="toggleCombine();"/> Combined
+              </label>
+            </div>
+            <div class="row">
+              <div class="combined col-md-6">
+                <h4>Script 1</h4>
+                <table id="character_matrix1" class="table-bordered table-condensed character_matrix">
+                </table>
+              </div>
+              <div class="combined col-md-6">
+                <h4>Script 2</h4>
+                <table id="character_matrix2" class="table-bordered table-condensed character_matrix">
+                </table>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Difference</h4>
+                <table id="character_difference_matrix" class="table-bordered table-condensed character_matrix">
+                </table>
+              </div>
+              <div class="col-md-12">
+                <div class="panel panel-warning">
+                  <div class="panel panel-heading">Similarity</div>
+                  <div class="panel panel-body"><span class="h1 text-center" id="matrix_similarity"></span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

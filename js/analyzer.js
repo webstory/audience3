@@ -252,13 +252,19 @@ var matrix_tab = (function(module) {
   var heat1 = function(heat) {
     var contrast = $("#contrast").val() - 0;
     var value = math.min(255, parseInt(heat * contrast));
-    return "rgba("+value+",0,0,100)";
+    return "rgba("+value+",0,0,255)";
   }
 
   var heat2 = function(heat) {
     var contrast = $("#contrast").val() - 0;
     var value = math.min(255, parseInt(heat * contrast));
-    return "rgba(0,0,"+value+",100)";
+    return "rgba(0,0,"+value+",255)";
+  }
+
+  var heat3 = function(heat) {
+    var contrast = $("#contrast").val() - 0;
+    var value = math.min(255, parseInt(heat * contrast));
+    return "rgba(0,"+value+","+value+",255)";
   }
 
   // Step 1: make groups
@@ -368,17 +374,26 @@ var matrix_tab = (function(module) {
 
     var matrix1 = $("#character_matrix1");
     var matrix2 = $("#character_matrix2");
+    var matrix_diff = $("#character_difference_matrix");
 
     build_table_ui(matrix1, groupNames);
     build_table_ui(matrix2, groupNames);
+    build_table_ui(matrix_diff, groupNames);
 
     var matrix_size = groupNames.length;
     
     var heatmap1 = make_matrix(matrix_size, module.script1, groups1);
     var heatmap2 = make_matrix(matrix_size, module.script2, groups2);
+    var heatmap3 = math.add(math.matrix(heatmap1), math.multiply(math.matrix(heatmap2),-1))
+                       .map(function(value, index, matrix) { return math.abs(value); })
+                       .valueOf();
     
     fill_matrix(matrix1, heatmap1, heat1);
     fill_matrix(matrix2, heatmap2, heat2);
+    fill_matrix(matrix_diff, heatmap3, heat3);
+    
+    var matrix_similarity = 1-(math.sum(heatmap3)/2);
+    $("#matrix_similarity").text((matrix_similarity*100).toFixed(3) + "%"); 
   }
 
   return self;
