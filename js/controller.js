@@ -6,8 +6,10 @@ $(function() {
 
 function toggleCombine() {
   if($("#matrix .combined").css("opacity") == "0.5") {
-    $("#matrix .combined").css("opacity",1.0).css("position","inherit");
+    $("#matrix .combined").css("opacity",1.0)
+    $("#matrix .combined:gt(0)").css("position","inherit");
   } else {
-    $("#matrix .combined").css("opacity",0.5).css("position","absolute");	
+    $("#matrix .combined").css("opacity",0.5)
+    $("#matrix .combined:gt(0)").css("position","absolute");	
   }
 }
