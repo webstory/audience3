@@ -298,8 +298,16 @@ var matrix_tab = (function(module) {
     
     for(var i=0; i<matrix_size; i++) {
       for(var j=0; j<matrix_size; j++) {
-        _.each(groups[i], function(character) {
-          matrix[i][j] += listen_matrix[all_chars.indexOf(character)][j];
+        _.each(groups[i], function(teller) {
+          var teller_index = all_chars.indexOf(teller);
+          if(teller_index >= 0) {
+            _.each(groups[j], function(listener) {
+              var listener_index = all_chars.indexOf(listener);
+              if(listener_index >= 0) {
+                matrix[i][j] += listen_matrix[teller_index][listener_index];
+              }
+            });
+          }
         });
       }
     }
