@@ -41,11 +41,13 @@
         </div>
 
         <div class="row">
+          <p>그룹 이름을 콤마로 구분해 적습니다.</p>
           <label>Character Group<input type="text" id="character_group_def" value="M,T,H1,H2,O1,O2"/></label>
         </div>
 
         <div class="row">
-          <button id="characters_tab" class="btn btn-primary col-xs-12" onclick="characters_tab.update()">Update</button>
+          <button id="characters_tab" class="btn btn-primary col-xs-8" onclick="characters_tab.update()">Start Analyze</button>
+          <button id="characters_tab" class="btn btn-default col-xs-4" onclick="load_sample()">Load sample</button>
         </div>
 
       </div>
@@ -68,7 +70,7 @@
             </div>
             <div class="panel panel-default">
               <div class="panel-heading">
-                <span class="panel-title">Groups</span>
+                <span class="panel-title">Groups (동명이인이나 같은 그룹에 묶고 싶은 인물은 콤마로 구분해서 넣으세요)</span>
               </div>
               <div class="panel panel-body">
                 <div class="row" id="character_groups1">
@@ -85,7 +87,7 @@
             </div>
             <div class="panel panel-default">
               <div class="panel-heading">
-                <span class="panel-title">Groups</span>
+                <span class="panel-title">Groups (동명이인이나 같은 그룹에 묶고 싶은 인물은 콤마로 구분해서 넣으세요)</span>
               </div>
               <div class="panel panel-body">
                 <div class="row" id="character_groups2">
@@ -93,8 +95,6 @@
               </div>
             </div>
             <button id="matrix_tab" class="btn btn-primary" onclick="matrix_tab.update(); $('#matrix_tab a').trigger('click');">Next &gt;&gt;</button>
-            <button class="btn btn-default" onclick="character_tab_test();">Test</button>
-
           </div>
           <div role="tabpanel" class="tab-pane" id="matrix">
             <h1>Matrix</h1>
@@ -148,35 +148,15 @@
   <script src="js/controller.js"></script>
   <script src="js/analyzer.js"></script>
 
-  <!-- Only for test -->
   <script>
-  function character_tab_test() {
-    var g1 = $("#character_groups1");
-    g1.find(".character_group:nth(0)").val("edward");
-    g1.find(".character_group:nth(1)").val("vivian");
-    g1.find(".character_group:nth(2)").val("stuckey");
-    g1.find(".character_group:nth(3)").val("kross");
-    g1.find(".character_group:nth(4)").val("david");
-    g1.find(".character_group:nth(5)").val("kit,vance");
-
-    var g2 = $("#character_groups2");
-    g2.find(".character_group:nth(0)").val("tom");
-    g2.find(".character_group:nth(1)").val("Summer");
-    g2.find(".character_group:nth(2)").val("MCKENZIE");
-    g2.find(".character_group:nth(3)").val("rachel");
-    g2.find(".character_group:nth(4)").val("vance");
-    g2.find(".character_group:nth(5)").val("paul");
-
-  }
-
-  $(function() {
+  function load_sample() {
     $.get("test/pretty_woman.txt", function(content) {
       window.script1.setValue(content);
     });
     $.get("test/500_days_of_summer.txt", function(content) {
       window.script2.setValue(content);
     });
-  });
+  }
   </script>
 
 </body>
