@@ -23,6 +23,9 @@ var Scene = function(title) {
 
 
 
+///////////////////////////////////////////////////////////////////
+// CHARACTERS TAB
+///////////////////////////////////////////////////////////////////
 var characters_tab = (function(module) {
   var self = {};
 
@@ -69,12 +72,27 @@ var characters_tab = (function(module) {
   }
 
   var build_character_group = function() {
+    // Store last value in the localstorage
+    window.localStorage.setItem("character_group", $("#character_group_def").val());
+
     var groups = $("#character_group_def").val().split(",");
+    
+    // Remove all
     var target = $("#character_groups1,#character_groups2").empty();
 
     _.each(groups, function(group) {
       $("<label class='col-xs-6'>"+group+" <input type='text' class='character_group'></label>").appendTo(target);
     });
+    
+    // Restore backup
+    var backup1 = (""+window.localStorage.getItem("character_groups1_character_group")).split("|");
+    var backup2 = (""+window.localStorage.getItem("character_groups2_character_group")).split("|");
+    
+    _.each(groups, function(group, index) {
+      $("#character_groups1 .character_group:nth("+index+")").val(backup1[index]);
+      $("#character_groups2 .character_group:nth("+index+")").val(backup2[index]);
+    });
+    
   }
 
   /**
@@ -222,7 +240,9 @@ var characters_tab = (function(module) {
 
 
 
-
+///////////////////////////////////////////////////////////////////
+// MATRIX TAB
+///////////////////////////////////////////////////////////////////
 
 var matrix_tab = (function(module) {
   var self = {};
@@ -332,6 +352,16 @@ var matrix_tab = (function(module) {
   }
 
   self.update = function() {
+    // Backup last data
+    var backup1 = [];
+    var backup2 = [];
+    
+    $("#character_groups1 .character_group").each(function(i) { backup1.push($(this).val()); });
+    $("#character_groups2 .character_group").each(function(i) { backup2.push($(this).val()); });
+    
+    window.localStorage.setItem("character_groups1_character_group", backup1.join("|"))
+    window.localStorage.setItem("character_groups2_character_group", backup2.join("|"))
+
     var groupNames = $("#character_group_def").val().split(",");
     var groups1 = make_groups($("#character_groups1"));
     var groups2 = make_groups($("#character_groups2"));
