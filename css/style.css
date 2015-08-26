@@ -30,16 +30,16 @@ svg {
   border:1px solid red;
 }
 
-#character_matrix {
+.character_matrix {
 
 }
 
-#character_matrix th {
+.character_matrix th {
   background-color:#ccc;
 }
 
 
-#character_matrix td {
+.character_matrix td {
   width:30px;
   height:30px;
 

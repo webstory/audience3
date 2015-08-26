@@ -93,32 +93,18 @@
               </div>
             </div>
             <button id="matrix_tab" class="btn btn-primary" onclick="matrix_tab.update(); $('#matrix_tab a').trigger('click');">Next &gt;&gt;</button>
+            <button class="btn btn-default" onclick="character_tab_test();">Test</button>
 
           </div>
           <div role="tabpanel" class="tab-pane" id="matrix">
             <h1>Matrix</h1>
             <h4>Contrast</h4>
             <input id="contrast" type="range" min="1000" max="10000" value="2000" onInput="matrix_tab.update()"/>
-            <table id="character_matrix" class="table-bordered table-condensed">
-              <thead>
-                <tr>
-                  <th>*</th>
-                  <th>M</th>
-                  <th>T</th>
-                  <th>H1</th>
-                  <th>H2</th>
-                  <th>O1</th>
-                  <th>O2</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><th>M</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><th>T</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><th>H1</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><th>H2</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><th>O1</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><th>O2</th><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-              </tbody>
+            <h4>Script 1</h4>
+            <table id="character_matrix1" class="table-bordered table-condensed character_matrix">
+            </table>
+            <h4>Script 2</h4>
+            <table id="character_matrix2" class="table-bordered table-condensed character_matrix">
             </table>
           </div>
         </div>
@@ -138,6 +124,25 @@
 
   <!-- Only for test -->
   <script>
+  function character_tab_test() {
+    var g1 = $("#character_groups1");
+    g1.find(".character_group:nth(0)").val("edward");
+    g1.find(".character_group:nth(1)").val("vivian");
+    g1.find(".character_group:nth(2)").val("stuckey");
+    g1.find(".character_group:nth(3)").val("kross");
+    g1.find(".character_group:nth(4)").val("david");
+    g1.find(".character_group:nth(5)").val("kit,vance");
+
+    var g2 = $("#character_groups2");
+    g2.find(".character_group:nth(0)").val("tom");
+    g2.find(".character_group:nth(1)").val("Summer");
+    g2.find(".character_group:nth(2)").val("MCKENZIE");
+    g2.find(".character_group:nth(3)").val("rachel");
+    g2.find(".character_group:nth(4)").val("vance");
+    g2.find(".character_group:nth(5)").val("paul");
+
+  }
+
   $(function() {
     $.get("test/pretty_woman.txt", function(content) {
       window.script1.setValue(content);

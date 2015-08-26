@@ -58,12 +58,6 @@ var characters_tab = (function(module) {
       $(elem).append("<a href='#' class='col-xs-3 btn btn-sm btn-default' role='button' data-toggle='tooltip' data-placement='top' title='"+ld(character)+"'>"+character+"</a>");
     });
 
-
-
-    // $(elem).find("a:lt("+maxDeltaPosition+")").addClass("btn-primary");
-    // $(elem).find("a:gt("+(maxDeltaPosition-1)+"):lt("+avgDeltaPosition+")").addClass("btn-success");
-    // $(elem).find("a:gt("+avgDeltaPosition+")").addClass("btn-default");
-
     $('[data-toggle="tooltip"]').tooltip();
   }
 
@@ -173,7 +167,6 @@ var characters_tab = (function(module) {
 
     result.listen_matrix = listen_matrix;
 
-    console.log(listen_degree);
     console.log(scenes);
     console.log(listen_matrix);
 
@@ -189,8 +182,6 @@ var characters_tab = (function(module) {
 
     var delta = _.map(_.zipWith(degrees1, degrees2, _.add), Math.abs);
     delta[0] = 0;
-
-    console.log(delta);
 
     degrees1.shift();
     delete degress2;
@@ -223,15 +214,74 @@ var matrix_tab = (function(module) {
     return "rgba("+value+",0,0,100)";
   }
 
-  self.update = function() {
-    var groups = [];
+  var heat2 = function(heat) {
+    var contrast = $("#contrast").val() - 0;
+    var value = math.min(255, parseInt(heat * contrast));
+    return "rgba(0,0,"+value+",100)";
+  }
 
-    $(".character_type").each(function(i, elem) {
-      groups[i] = $(elem).val();
+  var make_groups = function(g1, g2) {
+    var script1Group = [];
+    g1.find(".character_group").each(function(i) {
+      script1Group.push(_.map($(this).val().toUpperCase().split(","), function(name) { return name.trim(); }));
     });
+
+    var script2Group = [];
+    g2.find(".character_group").each(function(i) {
+      script2Group.push(_.map($(this).val().toUpperCase().split(","), function(name) { return name.trim(); }));
+    });
+
+    console.log(script1Group);
+    console.log(script2Group);
+
+    return [script1Group,script2Group];
+  }
+
+  var build_table_ui = function(target, groupNames) {
+    target.empty();
+    var head = $("<thead>");
+    var header_row = $("<tr>")
+
+    header_row.append("<th>*</th>");
+
+    _.each(groupNames, function(groupName) {
+      header_row.append("<th>"+groupName+"</th>")
+    });
+
+    head.append(header_row);
+
+    var body = $("<tbody>")
+    var length = groupNames.length;
+    _.each(groupNames, function(groupName) {
+      var row = $("<tr>");
+      row.append("<th>"+groupName+"</th>")
+
+      for(var i=0; i<length; i++) {
+        row.append("<td></td>");
+      }
+
+      body.append(row);
+    });
+
+    target.append(head).append(body);
+  }
+
+  self.update = function() {
+    var groupNames = $("#character_group_def").val().split(",");
+    var groups = make_groups($("#character_groups1"), $("#character_groups2"));
+
+    var matrix1 = $("#character_matrix1");
+    var matrix2 = $("#character_matrix2");
+
+    build_table_ui(matrix1, groupNames);
+    build_table_ui(matrix2, groupNames);
+
+    var matrix_size = groupNames.length;
 
     var degree = math.zeros(matrix_size, matrix_size).valueOf();
 
+////////////////////////////////////////////////////////
+// How go get listen matrix?
     module.listen_matrix
 
     for(var i=0; i<matrix_size; i++) {
