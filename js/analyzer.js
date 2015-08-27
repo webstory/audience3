@@ -1,24 +1,21 @@
+/* global math */
 'use strict';
-var module = {};
+var module = this;
 
 var Scene = function(title) {
-  var self = {};
+  this.title = ""+title;
+  this.characters = [];
+  this.dialogs = {};
+  this.action_script = "";
 
-  self.title = ""+title;
-  self.characters = [];
-  self.dialogs = {};
-  self.action_script = "";
-
-  self.add_character = function(character) {
+  this.add_character = function(character) {
     if(!!character && character.match(/\S+/).length >= 1) {
-      if(!_.contains(self.characters, character)) {
-        self.characters.push(character.trim());
-        self.dialogs[character] = 0;
+      if(!_.contains(this.characters, character)) {
+        this.characters.push(character.trim());
+        this.dialogs[character] = 0;
       }
     }
   }
-
-  return self;
 };
 
 
@@ -116,11 +113,10 @@ var characters_tab = (function(module) {
 
     var lines = doc.split('\n');
 
-    var cur_scene = new Scene();
+    var cur_scene = new Scene('');
     var cur_character = 'NONAME';
 
-    // Step 1: Character detection
-    // Pass 1: Extract dialog character
+    // Step 1: Extract dialog character
     $.each(lines, function(i, e) {
       if(e.match(/^INT\.|EXT\.|INT\/EXT\./)) {
         scenes.push(cur_scene);
@@ -148,7 +144,7 @@ var characters_tab = (function(module) {
       }
     });
 
-    // Pass 2: Extract additional character in action tag
+    // Step 2: Extract additional character in action tag
     var all_chars = _.uniq(_.flatten(_.map(scenes, function(scene) { return scene.characters; })));
 
     $.each(scenes, function(i, scene) {
@@ -161,7 +157,7 @@ var characters_tab = (function(module) {
       delete scene.action_script;
     });
 
-    // Pass 3: Make listen matrix
+    // Step 3: Make listen matrix
     var listen_matrix = math.zeros(all_chars.length, all_chars.length).valueOf();
     $.each(scenes, function(i, scene) {
 
@@ -176,7 +172,7 @@ var characters_tab = (function(module) {
       });
     });
 
-    // Pass 4: Character sort by listen degree
+    // Step 4: Character sort by listen degree
     var listen_degree = math.zeros(all_chars.length).valueOf();
     for(var i=0; i<all_chars.length; i++) {
       for(var j=0; j<all_chars.length; j++) {
@@ -189,7 +185,7 @@ var characters_tab = (function(module) {
 
     result.listen_degree = listen_degree;
 
-    // Pass 5: Re-adjust all_characters(Degree order)
+    // Step 5: Re-adjust all_characters(Degree order)
     all_chars = _.map(listen_degree, function(n) { return n[0]; });
 
     $.each(scenes, function(i, scene) {
@@ -213,7 +209,7 @@ var characters_tab = (function(module) {
     result.all_characters = all_chars;
 
 
-    // Pass 5: Make character groups
+    // Step 6: Make character groups
     var degrees1 = _.map(listen_degree, function(n) { return n[1]; });
     var degrees2 = _.map(listen_degree, function(n) { return -n[1]; });
 
@@ -243,10 +239,8 @@ var characters_tab = (function(module) {
 ///////////////////////////////////////////////////////////////////
 // MATRIX TAB
 ///////////////////////////////////////////////////////////////////
-
 var matrix_tab = (function(module) {
   var self = {};
-  var matrix_size = 6;
 
   // Utility
   var heat1 = function(heat) {
