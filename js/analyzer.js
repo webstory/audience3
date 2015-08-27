@@ -145,7 +145,9 @@ var characters_tab = (function(module) {
     });
 
     // Step 2: Extract additional character in action tag
-    var all_chars = _.uniq(_.flatten(_.map(scenes, function(scene) { return scene.characters; })));
+    var all_chars = _(scenes).map(function(scene) { return scene.characters; })
+                             .flatten().uniq().value();
+    
 
     $.each(scenes, function(i, scene) {
       $.each(all_chars, function(j, character) {
@@ -216,7 +218,7 @@ var characters_tab = (function(module) {
     degrees1.unshift(0);
     degrees2.push(0);
 
-    var delta = _.map(_.zipWith(degrees1, degrees2, _.add), Math.abs);
+    var delta = _(degrees1).zipWith(degrees2, _.add).map(Math.abs).value();
     delta[0] = 0;
 
     degrees1.shift();
