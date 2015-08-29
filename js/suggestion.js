@@ -76,7 +76,7 @@ var Suggestion = (function(module) {
     header_row.append("<th>Movie</th>");
 
     for(var i=0; i<unrated_movies; i++) {
-      header_row.append("<th>M"+(i+rated_movies)+"</th>");
+      header_row.append("<th>M"+(i+rated_movies+1)+"</th>");
     }
 
     head.append(header_row);
@@ -158,7 +158,7 @@ var Suggestion = (function(module) {
       row.append($("<td>U"+(userIdx+1)+"</td>"))
       var col = $("<td>");
       user.map(function(movies) {
-        col.append("<span>M"+(movies[0]+rated_movies)+"("+parseInt(movies[1]*1000)+") </span>");
+        col.append("<span>M"+(movies[0]+rated_movies+1)+"("+parseInt(movies[1]*1000)+") </span>");
       });
       row.append(col);
       target.append(row);
