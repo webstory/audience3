@@ -23,13 +23,12 @@ var Suggestion = (function(module) {
         return random();
     });
 
-    module.closenessMatrix = m1.valueOf();
+    return m1.valueOf();
   }
 
-  module.makeRatingTable = function() {
+  module.makeRatingTable = function(target, data) {
     var user_count = $('#user_count').val() - 0;
     var rated_movies = $('#rated_movies').val() - 0;
-    var target = $("#movie_rating_table");
 
     target.empty();
 
@@ -50,7 +49,13 @@ var Suggestion = (function(module) {
       row.append("<th>U"+(i+1)+"</th>")
 
       for(var j=0; j<rated_movies; j++) {
-        row.append("<td><input type='text' value='0'/></td>");
+        var rating;
+        try {
+          rating = data[i][j] || 0;
+        } catch(err) {
+          rating = 0;
+        }
+        row.append("<td><input type='text' value='"+rating+"'/></td>");
       }
 
       body.append(row);
@@ -59,10 +64,9 @@ var Suggestion = (function(module) {
     target.append(head).append(body);
   }
 
-  module.makeSimilarityTable = function() {
+  module.makeSimilarityTable = function(target, data) {
     var rated_movies = $('#rated_movies').val() - 0;
     var unrated_movies = $('#unrated_movies').val() - 0;
-    var target = $("#movie_similarity_table");
 
     target.empty();
 
@@ -83,7 +87,7 @@ var Suggestion = (function(module) {
       row.append("<th>M"+(i+1)+"</th>")
 
       for(var j=0; j<unrated_movies; j++) {
-        var similarity = module.closenessMatrix[i][j];
+        var similarity = data[i][j];
         row.append("<td><input type='text' value='"+similarity+"'/></td>");
       }
 
@@ -93,10 +97,31 @@ var Suggestion = (function(module) {
     target.append(head).append(body);
   }
 
+  module.extractMatrix = function(target) {
+    var data = [];
+
+    $(target).find("tbody")
+      .find("tr").each(function(i,d) {
+        var row = [];
+        $(d).find("input").each(function(i, d) {
+          row.push($(d).val()-0);
+        });
+        console.log(row);
+        data.push(row);
+      });
+
+    return data;
+  }
+
+  module.restoreMatrix = function(target, data) {
+
+  }
+
   module.update = function() {
-    makeMatrix();
-    makeRatingTable();
-    makeSimilarityTable();
+    var backup1 = extractMatrix($("#movie_rating_table"));
+    var m1 = makeMatrix();
+    makeRatingTable($("#movie_rating_table"), backup1);
+    makeSimilarityTable($("#movie_similarity_table"), m1);
   }
   
   return module;
