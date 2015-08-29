@@ -18,21 +18,30 @@ svg {
   border:1px solid red;
 }
 
-.character_matrix {
+.character_matrix,.rating_matrix {
 
 }
 
-.character_matrix th {
+.character_matrix th,.rating_matrix th {
   background-color:#ccc;
 }
 
 
-.character_matrix td {
+.character_matrix td,.rating_matrix td {
   width:30px;
   height:30px;
 
   color:white;
   font-size:x-small;
+}
+
+.rating_matrix input {
+  width:30px;
+  height:30px;
+
+  color:black;
+  font-size:small;
+  text-align:center;
 }
 
 tabset,tab {

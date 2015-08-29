@@ -8,18 +8,95 @@ var Suggestion = (function(module) {
   }
   
   module.setSeed = function(x) {
-	seed = x;
+    seed = x;
   }
   
-  module.makeMatrix = function(size) {
-	if(!size) size = [5,25];
-	// Make similarity matrix(depend on seed)
-	var m1 = math.map(math.zeros(size[0],size[1]),function(value) {
-		return random();
-	});
-	
-	console.log(m1.valueOf());
-	  
+  module.makeMatrix = function() {
+    var seed = $('#random_seed').val() - 0;
+    var rated_movies = $('#rated_movies').val() - 0;
+    var unrated_movies = $('#unrated_movies').val() - 0;
+    setSeed(seed);
+
+    // Make similarity matrix(depend on seed)
+    // Row: Rated movie, Col: Unrated movie
+    var m1 = math.map(math.zeros(rated_movies,unrated_movies),function(value) {
+        return random();
+    });
+
+    module.closenessMatrix = m1.valueOf();
+  }
+
+  module.makeRatingTable = function() {
+    var user_count = $('#user_count').val() - 0;
+    var rated_movies = $('#rated_movies').val() - 0;
+    var target = $("#movie_rating_table");
+
+    target.empty();
+
+    var head = $("<thead>");
+    var header_row = $("<tr>")
+
+    header_row.append("<th>User</th>");
+
+    for(var i=0; i<rated_movies; i++) {
+      header_row.append("<th>M"+(i+1)+"</th>");
+    }
+
+    head.append(header_row);
+
+    var body = $("<tbody>")
+    for(var i=0; i<user_count; i++) {
+      var row = $("<tr>");
+      row.append("<th>U"+(i+1)+"</th>")
+
+      for(var j=0; j<rated_movies; j++) {
+        row.append("<td><input type='text' value='0'/></td>");
+      }
+
+      body.append(row);
+    }
+
+    target.append(head).append(body);
+  }
+
+  module.makeSimilarityTable = function() {
+    var rated_movies = $('#rated_movies').val() - 0;
+    var unrated_movies = $('#unrated_movies').val() - 0;
+    var target = $("#movie_similarity_table");
+
+    target.empty();
+
+    var head = $("<thead>");
+    var header_row = $("<tr>")
+
+    header_row.append("<th>Movie</th>");
+
+    for(var i=0; i<unrated_movies; i++) {
+      header_row.append("<th>M"+(i+6)+"</th>");
+    }
+
+    head.append(header_row);
+
+    var body = $("<tbody>")
+    for(var i=0; i<rated_movies; i++) {
+      var row = $("<tr>");
+      row.append("<th>M"+(i+1)+"</th>")
+
+      for(var j=0; j<unrated_movies; j++) {
+        var similarity = module.closenessMatrix[i][j];
+        row.append("<td><input type='text' value='"+similarity+"'/></td>");
+      }
+
+      body.append(row);
+    }
+
+    target.append(head).append(body);
+  }
+
+  module.update = function() {
+    makeMatrix();
+    makeRatingTable();
+    makeSimilarityTable();
   }
   
   return module;

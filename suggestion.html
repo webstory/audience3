@@ -25,6 +25,50 @@
     </nav>
   </section>
   <section class="container">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <span class="panel-title">Parameters</span>
+          </div>
+          <div class="panel-body">
+            <label>Random seed <input type="text" id="random_seed" value="1" placeholder="Integer"/></label>
+            <label>Rated movies <input type="text" id="rated_movies" value="5" placeholder="Integer"/></label>
+            <label>Unrated movies <input type="text" id="unrated_movies" value="25" placeholder="Integer"/></label>
+            <label>Users <input type="text" id="user_count" value="5" placeholder="Integer"/></label>
+          </div>
+          <div class="panel-footer">
+            <button id="build_matrix_button" class="btn btn-primary" onclick="Suggestion.update()">Build Matrix</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <span class="panel-title">User ratings (1~5)</span>
+          </div>
+          <div class="panel-body">
+            <table class="table-bordered table-condensed rating_matrix" id="movie_rating_table">
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="panel panel-warning">
+          <div class="panel-heading">
+            <span class="panel-title">Movie similarity (0 to 1)</span>
+          </div>
+          <div class="panel-body">
+            <table class="table-bordered table-condensed rating_matrix" id="movie_similarity_table">
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    
+    
 
   </section>
 
@@ -35,10 +79,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.6.0/codemirror.min.js"></script>
 
   <script src="js/suggestion.js"></script>
-  <!-- For test -->
-  <script>
-    Suggestion.makeMatrix();
-  </script>
 
 </body>
 </html>
