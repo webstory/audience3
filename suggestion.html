@@ -36,6 +36,7 @@
             <label>Rated movies <input type="text" id="rated_movies" value="5" placeholder="Integer"/></label>
             <label>Unrated movies <input type="text" id="unrated_movies" value="25" placeholder="Integer"/></label>
             <label>Users <input type="text" id="user_count" value="5" placeholder="Integer"/></label>
+            <label>Suggestion count <input type="text" id="suggestion_count" value="5" placeholder="Integer"/></label>
           </div>
           <div class="panel-footer">
             <button id="build_matrix_button" class="btn btn-primary" onclick="Suggestion.update()">Build Matrix</button>
@@ -48,7 +49,7 @@
             <span class="panel-title">User ratings (1~5)</span>
           </div>
           <div class="panel-body">
-            <table class="table-bordered table-condensed rating_matrix" id="movie_rating_table">
+            <table class="table table-bordered table-condensed rating_matrix" id="movie_rating_table">
             </table>
           </div>
         </div>
@@ -56,10 +57,10 @@
       <div class="col-md-12">
         <div class="panel panel-warning">
           <div class="panel-heading">
-            <span class="panel-title">Movie similarity (0 to 1)</span>
+            <span class="panel-title">Movie similarity (0 to 1) - Warning! Those values are not keeping when rebuild matrix.</span>
           </div>
           <div class="panel-body">
-            <table class="table-bordered table-condensed rating_matrix" id="movie_similarity_table">
+            <table class="table table-bordered table-condensed rating_matrix" id="movie_similarity_table">
             </table>
           </div>
         </div>
@@ -68,6 +69,24 @@
     </div>
     <div class="row">
       <button id="do_suggestion_button" class="btn btn-danger" onclick="Suggestion.suggestion()">Do suggestion &gt;&gt;</button>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <span class="panel-title">Movie suggest</span>
+          </div>
+          <div class="panel-body">
+            <table class="table table-bordered table-condensed table-hover" id="movie_suggestion_table">
+              <thead>
+                <tr class="info"><th>User</th><th>Suggest(score)</th></tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
     
     
