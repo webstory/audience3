@@ -38,10 +38,10 @@ var characters_tab = (function(module) {
     var script2 = parseScript(doc2);
     build_character_list_ui(script2, $("#all_characters2"));
     
-    module.script1 = script1;
+    module.parsedScript1 = script1;
     
     console.log(script1);
-    module.script2 = script2;
+    module.parsedScript2 = script2;
   };
 
   var build_character_list_ui = function(parsed_script, elem) {
@@ -378,8 +378,8 @@ var matrix_tab = (function(module) {
 
     var matrix_size = groupNames.length;
     
-    var heatmap1 = make_matrix(matrix_size, module.script1, groups1);
-    var heatmap2 = make_matrix(matrix_size, module.script2, groups2);
+    var heatmap1 = make_matrix(matrix_size, module.parsedScript1, groups1);
+    var heatmap2 = make_matrix(matrix_size, module.parsedScript2, groups2);
     var heatmap3 = math.add(math.matrix(heatmap1), math.multiply(math.matrix(heatmap2),-1))
                        .map(function(value, index, matrix) { return math.abs(value); })
                        .valueOf();
