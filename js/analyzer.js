@@ -96,7 +96,7 @@ var characters_tab = (function(module) {
    * Parse Script
    * 
    * return object schema: {
-   *   all_characters[]: Character names sorted by talking langth
+   *   all_characters[]: Character names sorted by talking length
    *   listen_degree[]: Listen degree for each character
    *   listen_matrix[][]: Talk-Listen matrix 
    *   main: main characters
@@ -380,7 +380,7 @@ var matrix_tab = (function(module) {
     
     var heatmap1 = make_matrix(matrix_size, module.parsedScript1, groups1);
     var heatmap2 = make_matrix(matrix_size, module.parsedScript2, groups2);
-    var heatmap3 = math.add(math.matrix(heatmap1), math.multiply(math.matrix(heatmap2),-1))
+    var heatmap3 = math.subtract(math.matrix(heatmap1), math.matrix(heatmap2))
                        .map(function(value, index, matrix) { return math.abs(value); })
                        .valueOf();
     
